@@ -3,7 +3,7 @@ const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 const app = express();
 
-// --- KONEKSI DATABASE ---
+// KONEKSI DATABASE 
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -16,7 +16,7 @@ db.connect((err) => {
     console.log('✅ Database Terkoneksi...');
 });
 
-// --- MIDDLEWARE ---
+// MIDDLEWARE
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
@@ -28,7 +28,7 @@ app.locals.formatRupiah = (angka) => {
     return "Rp " + Number(angka).toLocaleString('id-ID');
 };
 
-// --- ROUTE 1: HOME ---
+// ROUTE 1: HOME
 app.get('/', (req, res) => {
     const sql = `SELECT p.id, p.name, p.price, p.image, s.quantity 
                  FROM products p 
@@ -39,7 +39,7 @@ app.get('/', (req, res) => {
     });
 });
 
-// --- ROUTE 2: PROSES BELI ---
+// ROUTE 2: PROSES BELI
 app.post('/buy', (req, res) => {
     const { product_id, customer_name, source } = req.body;
 
@@ -64,7 +64,7 @@ app.post('/buy', (req, res) => {
     });
 });
 
-// --- ROUTE 3: ADMIN PAGE ---
+// ROUTE 3: ADMIN PAGE
 app.get('/admin', (req, res) => {
     const sqlPurchases = `SELECT pur.id, pur.customer_name, pur.purchase_date, pur.status, p.name 
                           FROM purchases pur
@@ -87,7 +87,7 @@ app.get('/admin', (req, res) => {
     });
 });
 
-// --- ROUTE 4: CANCEL ---
+// ROUTE 4: CANCEL
 app.post('/cancel/:id', (req, res) => {
     const purchaseId = req.params.id;
     db.query("SELECT product_id FROM purchases WHERE id = ?", [purchaseId], (err, result) => {
